@@ -1,0 +1,400 @@
+#数据类型
+
+##基本类型设置为null的作用
+
+初始赋值为null，表示将要赋值为对象
+过程中赋值为null，表示对之前的赋值进行垃圾回收 
+##函数中局部对象
+
+	函数中的局部对象在函数结束时会被释放掉，所以即使过程中对形参进行了对象的赋值，对实参不会有任何影响
+
+函数中实参对形参传递的都是值，只不过有时是具体数值，有时是地址值
+#函数
+
+##call
+
+	call（）可以让一个函数成为指定任意对象的方法进行调用。本质上是修改了this的指向。 
+
+##回调函数
+
+用户自定的，但没调用，却在某种条件下执行了的函数
+常见的回调函数
+
+dom事件回调函数
+定时器回调函数
+ajax请求回调函数
+生命周期回调函数
+###IIFE
+
+立即执行函数
+
+```
+
+(function (){
+
+	//函数体
+
+})()
+
+```
+
+作用是能隐藏实现;且不会污染外部(全局)命名空间;从而可以编写js模块  
+
+---
+
+#函数高级
+
+##原型与原型链
+
+###原型prototype
+
+每一个函数都有一个prototype属性,默认指向一个Object空对象(原型对象)
+ 原型中有个constructor,它指向函数对象
+###显式原型和隐式原型
+
+每一个function都有一个prototype(显式原型)
+每一个实例都有一个__proto__(隐式原型)
+对象的隐式原型===对应构造函数的显式原型
+
+
+
+
+###原型链
+
+
+
+
+
+###探索instanceof
+
+A instanceof B是如何判断的?
+如果B的prototype(显式原型)出现在实例A的原型链上则返回true
+
+ ##执行上下文与执行上下文栈
+
+###变量提升与函数提升
+
+变量提升:变量会提前声明但不会马上赋值,会显示undefined
+函数提升:函数会被直接提升,所以可以被之前调用 
+###全局执行上下文
+
+再执行全局代码前将window去欸但能够为全局执行上下文然后进行预处理
+
+var 定义的全局变量赋为undefined,添加为window的属性
+function声明的全局函数赋值,添加为window的方法
+this赋值为window
+然后开始执行全局代码
+
+###函数执行上下文  
+
+arguments 伪数组
+在调用函数,准备执行函数体之前,创建对应的函数执行上下文(一块区域,存在与栈中),对局部数据进行预处理
+
+形参由实参赋值,添加为执行上下文的属性
+arguments由实参列表赋值,添加为执行上下文属性
+var'定义的局部变量赋值为undefined,添加为执行上下文属性
+function生命的函数进行赋值,添加为执行上下文的方法
+this赋值为调用的函数体
+开始执行函数代码
+
+###执行上下文栈
+
+
+**函数提升的优先级高于变量提升,且不会被同名变量声明时覆盖,但是会被变量赋值后覆盖 ** 
+###作用域与作用域链
+
+ES6之前没有块作用域
+隔离变量：同名变量在不同作用域里不会冲突  
+
+作用域是静态的，只要函数定义好后就一直存在，不会变化，**即使放在了其他函数的执行里**；二执行上下文是动态的，调用函数时创建，函数调用结束时上下文环境就会被自动释放
+执行上下文时从属于所在作用域里
+####作用域链
+
+就是通过一层层向外寻找变量直到最外层也不存在 
+
+**只用函数有作用域，对象没有**，对象要调用方法只能用对象.方法或者对象[方法]的形式调用,不能通过作用域链来调用
+###闭包
+
+当一个嵌套的内部(子)函数引用了嵌套的外部(父)函数的变量(函数)时,就产生了闭包
+
+**执行函数定义就会产生闭包**,不用调用内部函数 
+####闭包的作用
+
+使函数内部的变量(局部变量)在执行完之后,仍然存活在内存当中>———从而演成了局部变量的生命周期
+让函数的外部可以读写到函数内部的数据
+####闭包的应用
+
+定义JS模块
+具有特定功能的Js文件
+将所有的数据和功能都封装在一个函数内部（私有的）
+只向外暴露一个包含n个方法的对象和函数
+模块的使用者，只需要通过模块暴露的对象调用方法来实现对应的功能
+####闭包的缺点及解决
+
+缺点
+
+内部比那辆没有释放，占用内存时间会变长
+容易造成内存泄露（赋值为null后会让内部函数变成垃圾对象然后回收闭包）
+####内存溢出与内存泄露
+
+#####内存溢出
+
+当程序运行超出剩余内存时报错
+
+#####内存泄露
+
+占用的内存**没有及时释放**
+内存泄露累计多了容易导致内存溢出
+#####内存碎片
+
+分配内存时产生，分为外部碎片和内部碎片。其中外部碎片不适于某个进程，是由于物理地址空间无法连续分配而多出的空间。内部碎片是已分配给进程，但却没使用的区域。
+
+---
+#对象高级
+
+##对象创建模式
+
+###构造函数的模式
+
+适用于起始时不确定对象内部数据
+
+###字面量模式
+
+适用于内部对象确定
+
+###工场模式
+
+通过工厂函数动态创建对象并返回 
+
+```
+
+function creatPerson(name,age,gender){
+
+	var obj={
+
+	this.name=name;
+
+	this.age=age;
+
+	this.gender=gender;
+
+	}
+
+	return obj;
+
+}
+
+```
+
+但对象没有具体的类型,都是object
+
+####自定义构造函+原型
+
+```
+
+//定义类型
+
+function Person(name,age,gender){
+
+	this.name=name;
+
+	this.age=age;
+
+	this.gender=gender;
+
+}	
+
+Person.prototype.setName=function(name){
+
+		this.name=name;
+
+	}
+
+//创建实例
+
+var p1 =new Person('Tom',18,'man')
+
+```
+
+##继承
+
+###原型链的继承
+
+####原型链继承的模式
+
+定义父类型构造函数
+给父类型的原型添加方法
+定义子类型的构造函数
+创建父类型的对象赋值给子类型的原型(关键是**子类型的原型为父类型的一个实例对象**)
+将子类型原型的constructor设置为子类型
+给子类型原型添加方法
+创建子类型的对象:可以调用父类型的方法
+
+###借用构造函数继承(雾
+
+**关键是用call()调用父类构造函数**
+
+ ```
+
+function Person(name,age){
+
+	this.name= name;
+
+	this.age=age;
+
+}
+
+function Student(name,age,price){
+
+	Person.call(this,name,age)
+
+	this.price.prive;
+
+}
+
+//创建实例
+
+var s = new Student('Tom',18,14000)
+
+```
+
+### 组合继承
+
+```
+
+function Person(name,age,gender){
+
+    this.name=name;
+
+    this.age=age;
+
+    this.gender=gender;
+
+    }	
+
+    Person.prototype.setName=function(name){
+
+      this.name=name;
+
+    }
+
+    //创建子类型
+
+    function Student(name,age,price){
+
+      Person.call(this,name,age)//为了得到属性即name，age和gender
+
+      this.price=price;
+
+    }
+
+    //设置子类型的原型为父类型的实例
+
+    Student.prototype=new Person()//为了能考到父类型的方法，即setName（）
+
+    Student.prototype.constructor = Student //修正
+
+    Student.prototype.setPrice=function(price){
+
+      this.price=price
+
+    }
+
+    //创建实例
+
+    var s =new Student('Tom',24,15000)
+
+    s.setName('Bob')
+
+    s.setPrice(0)
+
+```
+
+# 线程机制与事件机制
+
+## 线程池
+
+	保存多个线程对象的容器,实现线程对象的反复利用
+
+**js是单线程运行的,但使用H5的Web Workers可以多线程运行**
+
+## js单线程执行
+
+alert会暂停对当前主进程的执行,同时暂停计时器,点击确定后,灰度执行
+
+代码分为**初始化代码**和**回调代码**
+js引擎执行代码的基本流程
+
+先执行初始化代码:包含一些特别的代码 回调函数(异步执行)
+设置定时器
+绑定事件监听(事件触发时才执行)
+发送ajax请求
+后面在某个时刻才会执行回调代码
+##事件循环模型
+
+
+内核将计时器里的回调函数放入回调队列,直到初始化代码执行结束才开始轮询执行回调队列里的回调函数.
+
+## web Worker
+
+是HTML5提供的一个javascript多线程解决方案
+
+我们可以将一些大计算量的代码交给Web Worker运行而不冻结用户界面
+
+但是子线程完全受主线程控制,且**不得操作DOM**.所以仍然没有改变js单线程的本质
+
+```
+
+//主线程代码
+
+//创建一个Worker对象并向他传递将在新线程中执行的脚本URL
+
+var worker = new Worker("worker.js");
+
+//接受worker传来的数据函数
+
+worker.onmessage = function(event){\
+
+	console.log(event.data);
+
+};
+
+//向worker发送数据
+
+worker.postMessage("hello world");
+
+```
+
+```
+
+function fibonacci(n) {
+
+ return n<=2 ? 1 : fibonacci(n-1) + fibonacci(n-2) //递归调用
+
+}
+
+//分线程代码
+
+console.log(this)
+
+this.onmessage = function (event) {
+
+ var number = event.data
+
+ console.log('分线程接收到主线程发送的数据: '+number)
+
+ //计算
+
+ var result = fibonacci(number)
+
+ postMessage(result)
+
+ console.log('分线程向主线程返回数据: '+result)
+
+ // alert(result) alert是window的方法, 在分线程不能调用
+
+ // 分线程中的全局对象不再是window, 所以在分线程中不可能更新界面
+
+}
+
+```
